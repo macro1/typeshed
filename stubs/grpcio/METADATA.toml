@@ -6,7 +6,6 @@ requires = [
 ]
 
 [tool.stubtest]
-ignore_missing_stub = true
 stubtest_requirements = [
     "grpcio-channelz",
     "grpcio-health-checking",
