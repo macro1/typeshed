@@ -13,10 +13,6 @@ grpc_reflection.v1alpha._base.BaseReflectionServicer.__init__
 # Error: is not present in stub
 # =============================
 # Missing stubs
-grpc.Server.add_registered_method_handlers
-grpc.ServicerContext.code
-grpc.ServicerContext.details
-grpc.aio.Server.add_registered_method_handlers
 grpc.aio._typing.*
 grpc_channelz.v1.*
 grpc_health.v1.*
