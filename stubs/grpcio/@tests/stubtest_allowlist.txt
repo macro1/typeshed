@@ -9,3 +9,23 @@ grpc.RpcError.trailing_metadata
 # =============================
 # Stub class is incomplete.
 grpc_reflection.v1alpha._base.BaseReflectionServicer.__init__
+
+# Error: is not present in stub
+# =============================
+# Missing stubs
+grpc.aio._typing.*
+grpc_channelz.v1.*
+grpc_health.v1.*
+grpc_reflection.v1alpha.*
+grpc_status.rpc_status.__all__
+grpc_status.rpc_status.aio
+
+# Error: failed to find stubs
+# =============================
+# Missing stubs
+grpc._cython.cygrpc
+grpc.beta.*
+grpc.experimental.*
+grpc.framework.*
+grpc_reflection.v1alpha.proto_reflection_descriptor_database
+grpc_reflection.v1alpha.reflection_pb2_grpc

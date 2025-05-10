@@ -20,9 +20,11 @@ from grpc import (
     StatusCode,
     _Options,
 )
+from grpc.aio._typing import EOFType
 
 _TRequest = TypeVar("_TRequest")
 _TResponse = TypeVar("_TResponse")
+EOF = EOFType()
 
 # Exceptions:
 
@@ -45,6 +47,9 @@ class AioRpcError(RpcError):
     # methods already exist.
     def debug_error_string(self) -> str: ...
     def initial_metadata(self) -> Metadata: ...
+
+def init_grpc_aio() -> None: ...
+def shutdown_grpc_aio() -> None: ...
 
 # Create Client:
 
@@ -150,11 +155,13 @@ class Server(metaclass=abc.ABCMeta):
     # Returns a bool indicates if the operation times out. Timeout is in seconds.
     @abc.abstractmethod
     async def wait_for_termination(self, timeout: float | None = ...) -> bool: ...
+    def add_registered_method_handlers(
+        self, service_name: str, method_handlers: dict[str, RpcMethodHandler[Any, Any]]
+    ) -> None: ...
 
 # Client-Side Context:
 
 _DoneCallbackType: TypeAlias = Callable[[Any], None]
-_EOFType: TypeAlias = object
 
 class RpcContext(metaclass=abc.ABCMeta):
     @abc.abstractmethod
@@ -188,7 +195,7 @@ class UnaryStreamCall(Call, Generic[_TRequest, _TResponse], metaclass=abc.ABCMet
     @abc.abstractmethod
     def __aiter__(self) -> AsyncIterator[_TResponse]: ...
     @abc.abstractmethod
-    async def read(self) -> _EOFType | _TResponse: ...
+    async def read(self) -> EOFType | _TResponse: ...
 
 class StreamUnaryCall(Call, Generic[_TRequest, _TResponse], metaclass=abc.ABCMeta):
     @abc.abstractmethod
@@ -202,7 +209,7 @@ class StreamStreamCall(Call, Generic[_TRequest, _TResponse], metaclass=abc.ABCMe
     @abc.abstractmethod
     def __aiter__(self) -> AsyncIterator[_TResponse]: ...
     @abc.abstractmethod
-    async def read(self) -> _EOFType | _TResponse: ...
+    async def read(self) -> EOFType | _TResponse: ...
     @abc.abstractmethod
     async def write(self, request: _TRequest) -> None: ...
     @abc.abstractmethod
@@ -453,3 +460,39 @@ class Metadata(Mapping[_MetadataKey, _MetadataValue]):
     def __contains__(self, key: object) -> bool: ...
     def __eq__(self, other: object) -> bool: ...
     def __add__(self, other: Any) -> Metadata: ...
+
+__all__ = (
+    "init_grpc_aio",
+    "shutdown_grpc_aio",
+    "AioRpcError",
+    "RpcContext",
+    "Call",
+    "UnaryUnaryCall",
+    "UnaryStreamCall",
+    "StreamUnaryCall",
+    "StreamStreamCall",
+    "Channel",
+    "UnaryUnaryMultiCallable",
+    "UnaryStreamMultiCallable",
+    "StreamUnaryMultiCallable",
+    "StreamStreamMultiCallable",
+    "ClientCallDetails",
+    "ClientInterceptor",
+    "UnaryStreamClientInterceptor",
+    "UnaryUnaryClientInterceptor",
+    "StreamUnaryClientInterceptor",
+    "StreamStreamClientInterceptor",
+    "InterceptedUnaryUnaryCall",
+    "ServerInterceptor",
+    "insecure_channel",
+    "server",
+    "Server",
+    "ServicerContext",
+    "EOF",
+    "secure_channel",
+    "AbortError",
+    "BaseError",
+    "UsageError",
+    "InternalError",
+    "Metadata",
+)

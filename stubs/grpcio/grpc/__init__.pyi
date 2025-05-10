@@ -304,6 +304,9 @@ class Server(abc.ABC):
     # Block current thread until the server stops. Returns a bool
     # indicates if the operation times out. Timeout is in seconds.
     def wait_for_termination(self, timeout: float | None = ...) -> bool: ...
+    def add_registered_method_handlers(
+        self, service_name: str, method_handlers: dict[str, RpcMethodHandler[Any, Any]]
+    ) -> None: ...
 
 # Authentication & Authorization Objects:
 
@@ -483,11 +486,13 @@ class ServicerContext(RpcContext, metaclass=abc.ABCMeta):
     def set_compression(self, compression: Compression) -> None: ...
     @abc.abstractmethod
     def set_trailing_metadata(self, trailing_metadata: _Metadata) -> None: ...
+    def trailing_metadata(self) -> _Metadata: ...
 
     # misnamed function 'details', does not align with status.proto, where it is called 'message':
     @abc.abstractmethod
     def set_details(self, details: str) -> None: ...
-    def trailing_metadata(self) -> _Metadata: ...
+    def code(self) -> StatusCode: ...
+    def details(self) -> str: ...
 
 # Service-Side Handler:
 
@@ -638,3 +643,70 @@ class StreamStreamMultiCallable(abc.ABC, Generic[_TRequest, _TResponse]):
 def protos(protobuf_path: str) -> ModuleType: ...
 def services(protobuf_path: str) -> ModuleType: ...
 def protos_and_services(protobuf_path: str) -> tuple[ModuleType, ModuleType]: ...
+
+__all__ = (
+    "FutureTimeoutError",
+    "FutureCancelledError",
+    "Future",
+    "ChannelConnectivity",
+    "StatusCode",
+    "Status",
+    "RpcError",
+    "RpcContext",
+    "Call",
+    "ChannelCredentials",
+    "CallCredentials",
+    "AuthMetadataContext",
+    "AuthMetadataPluginCallback",
+    "AuthMetadataPlugin",
+    "Compression",
+    "ClientCallDetails",
+    "ServerCertificateConfiguration",
+    "ServerCredentials",
+    "LocalConnectionType",
+    "UnaryUnaryMultiCallable",
+    "UnaryStreamMultiCallable",
+    "StreamUnaryMultiCallable",
+    "StreamStreamMultiCallable",
+    "UnaryUnaryClientInterceptor",
+    "UnaryStreamClientInterceptor",
+    "StreamUnaryClientInterceptor",
+    "StreamStreamClientInterceptor",
+    "Channel",
+    "ServicerContext",
+    "RpcMethodHandler",
+    "HandlerCallDetails",
+    "GenericRpcHandler",
+    "ServiceRpcHandler",
+    "Server",
+    "ServerInterceptor",
+    "unary_unary_rpc_method_handler",
+    "unary_stream_rpc_method_handler",
+    "stream_unary_rpc_method_handler",
+    "stream_stream_rpc_method_handler",
+    "method_handlers_generic_handler",
+    "ssl_channel_credentials",
+    "metadata_call_credentials",
+    "access_token_call_credentials",
+    "composite_call_credentials",
+    "composite_channel_credentials",
+    "compute_engine_channel_credentials",
+    "local_channel_credentials",
+    "local_server_credentials",
+    "alts_channel_credentials",
+    "alts_server_credentials",
+    "ssl_server_credentials",
+    "ssl_server_certificate_configuration",
+    "dynamic_ssl_server_credentials",
+    "channel_ready_future",
+    "insecure_channel",
+    "secure_channel",
+    "intercept_channel",
+    "server",
+    "protos",
+    "services",
+    "protos_and_services",
+    "xds_channel_credentials",
+    "xds_server_credentials",
+    "insecure_server_credentials",
+)
